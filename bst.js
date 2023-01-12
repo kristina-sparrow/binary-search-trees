@@ -1,20 +1,3 @@
-// Generate random array
-function randomArray(length) {
-  if (length <= 0 || !Number.isInteger(length)) return [];
-  let arr = [];
-  for (let i = 0; i < length; i++) {
-    arr.push(Math.floor(Math.random() * 100));
-  }
-  return arr;
-}
-
-// Remove duplicates and sort array
-function processArray(arr) {
-  arr = Array.from(new Set(arr)).sort((a, b) => a - b);
-  return arr;
-}
-
-// Binary search tree functions
 function Node(data, left = null, right = null) {
   return { data, left, right };
 }
@@ -24,7 +7,7 @@ function BinaryTree(arr) {
 
   function buildTree(arr) {
     if (!arr.length) return null;
-    arr = processArray(arr);
+    arr = Array.from(new Set(arr)).sort((a, b) => a - b);
     let mid = Math.floor(arr.length / 2);
     let root = Node(arr[mid]);
     root.left = buildTree(arr.slice(0, mid));
@@ -32,8 +15,14 @@ function BinaryTree(arr) {
     return root;
   }
 
-  function printTree(root) {
-    prettyPrint(root);
+  function prettyPrint(node, prefix = "", isLeft = true) {
+    if (node.right !== null) {
+      prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+    }
+    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+    if (node.left !== null) {
+      prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+    }
   }
 
   function insertValue(root, value) {
@@ -149,7 +138,7 @@ function BinaryTree(arr) {
   return {
     root,
     buildTree,
-    printTree,
+    prettyPrint,
     insertValue,
     deleteValue,
     levelOrder,
@@ -163,13 +152,4 @@ function BinaryTree(arr) {
   };
 }
 
-// Printing tree
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-  }
-  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-  }
-};
+module.exports = BinaryTree;
